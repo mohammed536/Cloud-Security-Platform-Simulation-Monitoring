@@ -1,0 +1,258 @@
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Cloud Security Platform — Interactive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f9;
+  margin: 0; padding: 0;
+}
+
+header {
+  background: #1a237e; color: white;
+  padding: 20px; text-align: center;
+}
+
+section {
+  background: white; margin: 20px;
+  padding: 20px; border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 { color: #1a237e; }
+
+.button, .btn {
+  padding: 12px 20px;
+  background: #1a237e; color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-block;
+  margin: 8px 0;
+  cursor: pointer;
+  font-size: 16px;
+  border: none;
+}
+
+.btn:hover { background: #3949ab; }
+
+pre {
+  background: #eee;
+  padding: 10px; border-radius: 6px;
+  overflow-x: auto;
+}
+
+.diagram-box {
+  background:#1a237e; color:white;
+  padding:20px; border-radius:12px;
+  width:80%; margin:auto;
+  text-align:center; font-size:18px;
+}
+
+.status {
+  padding: 12px;
+  background: #eef3ff;
+  border-radius: 10px;
+  margin: 10px 0;
+  border-right: 5px solid #1a237e;
+}
+
+#logBox {
+  background: #000; color: #0f0;
+  padding: 15px; border-radius: 10px;
+  height: 250px; overflow-y: auto;
+  font-family: "Courier New";
+  white-space: pre-line;
+}
+
+.lang-box { text-align:left; padding:10px; }
+
+</style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header>
+  <h1>Mohammed Al-Mutairi — ID 4432131</h1>
+  <p id="subtitle">منصة الأمن السحابي — المحاكاة والمراقبة</p>
+</header>
+
+<!-- Language Buttons -->
+<div class="lang-box">
+  <button class="btn" onclick="setLang('ar')">🇸🇦 العربية</button>
+  <button class="btn" onclick="setLang('en')">🇺🇸 English</button>
+</div>
+
+<!-- Brute Force -->
+<section>
+  <h2 id="bfTitle">🔐 تجربة هجوم Brute Force</h2>
+  <p id="bfDesc">محاكاة هجوم كلمات مرور وتحليل الاستجابة الأمنية.</p>
+  <button class="btn" id="bfBtn" onclick="startBruteForce()">ابدأ الهجوم</button>
+  <div id="bfStatus" class="status">جاهز…</div>
+</section>
+
+<!-- Ransomware -->
+<section>
+  <h2 id="ranTitle">🚨 تجربة اكتشاف Ransomware</h2>
+  <p id="ranDesc">النظام يحلل الملفات المشبوهة والتشفير السريع.</p>
+  <button class="btn" id="ranBtn" onclick="scanRansom()">ابدأ الفحص</button>
+  <div id="ranStatus" class="status">جاهز…</div>
+</section>
+
+<!-- Logs -->
+<section>
+  <h2 id="logTitle">🛡️ مراقبة الأحداث — SIEM (Logs)</h2>
+  <p id="logDesc">تظهر هنا كل الأحداث، التحذيرات، والإنذارات.</p>
+  <button class="btn" id="logBtn" onclick="loadLogs()">🔄 تحديث</button>
+  <div id="logBox"></div>
+</section>
+
+<!-- Commands -->
+<section>
+  <h2 id="cmdTitle">🔧 أوامر التشغيل – المنصة الكاملة</h2>
+
+  <pre id="cmdBox">
+🔐 طبقة الوصول – IAM + MFA
+docker run -d --name keycloak -p 8080:8080 quay.io/keycloak/keycloak start-dev
+
+🛡️ طبقة التطبيقات – WAF + App
+docker compose up -d app waf
+
+🗄️ طبقة البيانات – تشفير + قاعدة بيانات
+python3 encrypt.py
+
+📡 طبقة المراقبة – SIEM + IDS
+docker compose up -d wazuh snort
+
+⚙️ طبقة الحوكمة – التقارير و Logs
+cat /var/log/audit.log
+  </pre>
+</section>
+
+<!-- Architecture -->
+<section>
+  <h2 id="archTitle">📊 المخطط المعماري الكامل</h2>
+  <div class="diagram-box">
+    IAM → WAF → Database → SIEM → Governance
+  </div>
+</section>
+
+<script>
+/*=============================
+   TRANSLATIONS
+=============================*/
+const text = {
+  ar: {
+    subtitle: "منصة الأمن السحابي — المحاكاة والمراقبة",
+    bfTitle: "🔐 تجربة هجوم Brute Force",
+    bfDesc: "محاكاة هجوم كلمات مرور وتحليل الاستجابة الأمنية.",
+    bfBtn: "ابدأ الهجوم",
+    ranTitle: "🚨 تجربة اكتشاف Ransomware",
+    ranDesc: "النظام يحلل الملفات المشبوهة والتشفير السريع.",
+    ranBtn: "ابدأ الفحص",
+    logTitle: "🛡️ مراقبة الأحداث — SIEM (Logs)",
+    logDesc: "تظهر هنا كل الأحداث، التحذيرات، والإنذارات.",
+    logBtn: "🔄 تحديث",
+    ready: "جاهز…",
+    cmdTitle: "🔧 أوامر التشغيل – المنصة الكاملة",
+    archTitle: "📊 المخطط المعماري الكامل",
+    dir: "rtl",
+    lang: "ar"
+  },
+
+  en: {
+    subtitle: "Cloud Security Platform — Simulation & Monitoring",
+    bfTitle: "🔐 Brute Force Attack Simulation",
+    bfDesc: "Simulate password attacks and analyze security response.",
+    bfBtn: "Start Attack",
+    ranTitle: "🚨 Ransomware Detection",
+    ranDesc: "System scans abnormal encryption activity.",
+    ranBtn: "Start Scan",
+    logTitle: "🛡️ Event Monitoring — SIEM Logs",
+    logDesc: "All events and alerts appear here.",
+    logBtn: "Refresh",
+    ready: "Ready…",
+    cmdTitle: "🔧 Platform Commands",
+    archTitle: "📊 Full Architecture Diagram",
+    dir: "ltr",
+    lang: "en"
+  }
+};
+
+/*=============================
+      APPLY LANGUAGE
+=============================*/
+function setLang(l){
+  const T = text[l];
+
+  document.documentElement.lang = T.lang;
+  document.documentElement.dir  = T.dir;
+
+  document.getElementById("subtitle").innerText = T.subtitle;
+
+  document.getElementById("bfTitle").innerText = T.bfTitle;
+  document.getElementById("bfDesc").innerText = T.bfDesc;
+  document.getElementById("bfBtn").innerText = T.bfBtn;
+
+  document.getElementById("ranTitle").innerText = T.ranTitle;
+  document.getElementById("ranDesc").innerText = T.ranDesc;
+  document.getElementById("ranBtn").innerText = T.ranBtn;
+
+  document.getElementById("logTitle").innerText = T.logTitle;
+  document.getElementById("logDesc").innerText = T.logDesc;
+  document.getElementById("logBtn").innerText = T.logBtn;
+
+  document.getElementById("cmdTitle").innerText = T.cmdTitle;
+  document.getElementById("archTitle").innerText = T.archTitle;
+
+  document.getElementById("bfStatus").innerText = T.ready;
+  document.getElementById("ranStatus").innerText = T.ready;
+}
+
+/*=============================
+      SIMULATION EFFECTS
+=============================*/
+function log(msg){
+  const box=document.getElementById("logBox");
+  const t=new Date().toLocaleTimeString();
+  box.innerText+=`[${t}] ${msg}\n`;
+  box.scrollTop=box.scrollHeight;
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+async function startBruteForce(){
+  const out=document.getElementById("bfStatus");
+  out.innerText="Processing…";
+  log("Brute Force attack detected");
+  await sleep(800);
+  out.innerText="MFA triggered";
+  log("MFA activated");
+  await sleep(900);
+  out.innerText="IP Blocked ✔️";
+  log("IP blocked");
+}
+
+async function scanRansom(){
+  const out=document.getElementById("ranStatus");
+  out.innerText="Scanning…";
+  log("Ransomware scan started");
+  await sleep(900);
+  out.innerText="Suspicious encryption detected";
+  log("High-speed encryption");
+  await sleep(900);
+  out.innerText="Threat isolated";
+  log("Device isolated");
+  await sleep(900);
+  out.innerText="Recovered ✔️";
+  log("Recovery complete");
+}
+
+function loadLogs(){ log("Logs refreshed"); }
+</script>
+
+</body>
+</html>
